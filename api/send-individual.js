@@ -59,8 +59,8 @@ export default async function handler(req, res) {
         // Envío del correo utilizando Resend
         const resend = new Resend(process.env.RESEND_API_KEY);
         await resend.emails.send({
-          from: "coopebred.com",
-          to: "onboarding@resend.dev",
+          from: "onboarding@resend.dev",
+          to: "gregoryjunior2101@gmail.com",
           subject: `Nuevo mensaje de ${nombres || "socio-individual"}`,
           html: htmlContent,
         });
