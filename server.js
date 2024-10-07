@@ -1,6 +1,8 @@
-const express = require("express");
-const sendIndividualHandler = require("./api/send-individual").default;
-require("dotenv").config();
+import express from "express";
+import sendIndividualHandler from "./api/send-individual.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;

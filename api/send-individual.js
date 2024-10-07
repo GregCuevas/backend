@@ -1,7 +1,9 @@
 import { IncomingForm } from "formidable";
 import { Resend } from "resend";
 import fs from "fs";
-require("dotenv").config();
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Exportar el handler para ser utilizado en `server.js`
 export default async function handler(req, res) {
