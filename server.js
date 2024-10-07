@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import sendIndividualHandler from "./api/send-individual.js";
+import sendEmpresaHandler from "./api/send-empresa.js";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -19,6 +20,7 @@ app.use(
 
 // Ruta para manejar el envío del formulario
 app.post("/api/send-individual", sendIndividualHandler);
+app.post("/api/send-empresa", sendEmpresaHandler);
 
 // Iniciar el servidor
 app.listen(PORT, () => {

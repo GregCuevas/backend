@@ -21,36 +21,49 @@ export default async function handler(req, res) {
 
       // Extraer los campos del formulario
       const {
+        tipoSocio,
         nombres,
         apellidos,
-        cedula,
+        cedulaIdentidad,
         telefono,
         email,
-        direccion1,
-        ciudad,
-        estado,
-        pais,
-        afiliacion,
-        comoSupiste,
+        direccionResidencia,
+        municipio,
+        provincia,
+        razonSocial,
+        rnc,
+        registroMercantil,
+        actividadEconomica,
+        direccionEmpresa,
+        telefonoEmpresa,
+        emailEmpresa,
       } = fields;
 
       // Extraer la ruta del archivo (foto de la cédula)
-      const cedulaFoto = files.cedulaFoto ? files.cedulaFoto.filepath : null;
+      const fotoCedula = files.fotoCedula ? files.fotoCedula.filepath : null;
 
       // Crear el contenido del correo en HTML
       const htmlContent = `
+        <p><strong>Tipo de Socio:</strong> ${tipoSocio || ""}</p>
         <p><strong>Nombre:</strong> ${nombres || ""} ${apellidos || ""}</p>
-        <p><strong>Cédula:</strong> ${cedula || ""}</p>
+        <p><strong>Cédula de Identidad:</strong> ${cedulaIdentidad || ""}</p>
         <p><strong>Teléfono:</strong> ${telefono || ""}</p>
         <p><strong>Email:</strong> ${email || ""}</p>
-        <p><strong>Dirección:</strong> ${direccion1 || ""}, ${ciudad || ""}, ${
-        estado || ""
-      }, ${pais || ""}</p>
-        <p><strong>Afiliación:</strong> ${afiliacion || ""}</p>
-        <p><strong>¿Cómo supiste?:</strong> ${comoSupiste || ""}</p>
+        <p><strong>Dirección de Residencia:</strong> ${
+          direccionResidencia || ""
+        }, ${municipio || ""}, ${provincia || ""}</p>
+        <p><strong>Razón Social:</strong> ${razonSocial || ""}</p>
+        <p><strong>RNC:</strong> ${rnc || ""}</p>
+        <p><strong>Registro Mercantil:</strong> ${registroMercantil || ""}</p>
+        <p><strong>Actividad Económica:</strong> ${actividadEconomica || ""}</p>
+        <p><strong>Dirección de la Empresa:</strong> ${
+          direccionEmpresa || ""
+        }</p>
+        <p><strong>Teléfono de la Empresa:</strong> ${telefonoEmpresa || ""}</p>
+        <p><strong>Email de la Empresa:</strong> ${emailEmpresa || ""}</p>
         ${
-          cedulaFoto
-            ? `<p><strong>Foto de la cédula:</strong></p><img src="${cedulaFoto}" alt="Foto de la cédula" />`
+          fotoCedula
+            ? `<p><strong>Foto de la cédula:</strong></p><img src="${fotoCedula}" alt="Foto de la cédula" />`
             : ""
         }
       `;
@@ -61,7 +74,7 @@ export default async function handler(req, res) {
         await resend.emails.send({
           from: "onboarding@resend.dev",
           to: "onboarding@resend.dev",
-          subject: `Nuevo mensaje de ${nombres || "socio-individual"}`,
+          subject: `Nuevo registro de empresa: ${razonSocial || "Empresa"}`,
           html: htmlContent,
         });
 
