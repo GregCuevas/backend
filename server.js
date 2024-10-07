@@ -1,11 +1,9 @@
-import express from "express";
-import sendIndividualHandler from "./api/send-individual.js";
-import dotenv from "dotenv";
-
-dotenv.config();
+const express = require("express");
+const sendIndividualHandler = require("./api/send-individual").default; // Cargar el handler
+require("dotenv").config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3000; // Usar el puerto proporcionado por Railway
 
 // Ruta para manejar el envío del formulario
 app.post("/api/send-individual", sendIndividualHandler);
