@@ -1,25 +1,21 @@
-import { IncomingForm } from "formidable";
 import { Resend } from "resend";
-import fs from "fs";
+import multer from "multer";
 import dotenv from "dotenv";
 
 dotenv.config();
 
-// Exportar el handler para ser utilizado en `server.js`
+// Configuración de multer para manejar la subida de archivos
+const storage = multer.memoryStorage(); // Almacena el archivo en memoria
+const upload = multer({ storage }).single("cedulaFoto"); // Solo maneja la subida de un archivo con el campo "cedulaFoto"
+
 export default async function handler(req, res) {
   if (req.method === "POST") {
-    const form = new IncomingForm();
-
-    // Procesar el FormData (incluyendo archivos)
-    form.parse(req, async (err, fields, files) => {
+    // Usar multer para manejar la subida de archivos
+    upload(req, res, async (err) => {
       if (err) {
-        console.error("Error al procesar el archivo", err);
-        return res
-          .status(500)
-          .json({ message: "Error al procesar el archivo" });
+        return res.status(500).json({ message: "Error al subir la foto", err });
       }
 
-      // Extraer los campos del formulario
       const {
         nombres,
         apellidos,
@@ -32,10 +28,10 @@ export default async function handler(req, res) {
         pais,
         afiliacion,
         comoSupiste,
-      } = fields;
+      } = req.body;
 
-      // Extraer la ruta del archivo (foto de la cédula)
-      const cedulaFoto = files.cedulaFoto ? files.cedulaFoto.filepath : null;
+      // Si hay una foto de cédula, convertirla a base64
+      const cedulaFoto = req.file ? req.file.buffer.toString("base64") : null;
 
       // Crear el contenido del correo en HTML
       const htmlContent = `
@@ -50,7 +46,7 @@ export default async function handler(req, res) {
         <p><strong>¿Cómo supiste?:</strong> ${comoSupiste || ""}</p>
         ${
           cedulaFoto
-            ? `<p><strong>Foto de la cédula:</strong></p><img src="${cedulaFoto}" alt="Foto de la cédula" />`
+            ? `<p><strong>Foto de la cédula:</strong></p><img src="data:image/jpeg;base64,${cedulaFoto}" alt="Foto de la cédula" />`
             : ""
         }
       `;
